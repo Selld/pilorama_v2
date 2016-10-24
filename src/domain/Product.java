@@ -2,6 +2,8 @@ package domain;
 
 import custom_exceptions.DomainConstraintsViolationException;
 
+import java.util.List;
+
 /**
  * @author selld
  * @version 1.0
@@ -21,7 +23,13 @@ public class Product {
 		return materials;
 	}
 
-	private void setMaterials(List<ProductMaterials> materials) {
+	private void setMaterials(List<ProductMaterials> materials) throws DomainConstraintsViolationException {
+		for (ProductMaterials m : materials) {
+			if (!m.getWood().isBuying()) {
+				throw new DomainConstraintsViolationException(
+						"Cannot create product from wood which is not buying now" + m.getWood().getName());
+			}
+		}
 		this.materials = materials;
 	}
 
@@ -53,7 +61,7 @@ public class Product {
 		this.productId = productId;
 	}
 
-	public Product(List<ProductMaterials> materials, String name, int price){
+	public Product(List<ProductMaterials> materials, String name, int price) throws DomainConstraintsViolationException {
 		setBalance(0);
 		setMaterials(materials);
 		setPrice(price);

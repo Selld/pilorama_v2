@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="customerDAO" class="dao.dao_mock.CustomerDAO_Mock"/>
+    <bean id="woodDAO" class="dao.dao_mock.WoodDAO_Mock"/>
+    <bean id="foresterDAO" class="dao.dao_mock.ForesterDAO_Mock"/>
+    <bean id="productDAO" class="dao.dao_mock.ProductDAO_Mock"/>
+    <bean id="saleDAO" class="dao.dao_mock.SaleDAO_Mock"/>
+    <bean id="supplyDAO" class="dao.dao_mock.SupplyDAO_Mock"/>
+    <bean id="userDAO" class="dao.dao_mock.UserDAO_Mock"/>
+</beans>
