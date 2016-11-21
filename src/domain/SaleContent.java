@@ -2,11 +2,14 @@ package domain;
 
 import custom_exceptions.DomainConstraintsViolationException;
 
+import javax.persistence.*;
+
 /**
  * @author selld
  * @version 1.0
  * @created 10-Oct-2016 10:57:01 PM
  */
+@Entity
 public class SaleContent {
 	public int getCount() {
 		return count;
@@ -36,8 +39,15 @@ public class SaleContent {
 		this.saleContentId = saleContentId;
 	}
 
+	@Column(name = "count")
 	private int count;
+
+	@ManyToOne
 	private Product product;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.TABLE)
+	@Column(name = "i_sale_content")
 	private int saleContentId;
 
     private SaleContent(){

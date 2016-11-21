@@ -1,25 +1,29 @@
 package domain;
 
 import custom_exceptions.DomainConstraintsViolationException;
-import domain.WoodType;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author selld
  * @version 1.0
  * @created 10-Oct-2016 10:56:57 PM
  */
+@Entity
 public class Wood {
 
-    public int getBalance() {
-        return balance;
+    public int getWoodCount() {
+        return woodCount;
     }
 
-    public void setBalance(int balance) throws DomainConstraintsViolationException {
-        if (balance < 0) {
+    public void setWoodCount(int woodCount) throws DomainConstraintsViolationException {
+        if (woodCount < 0) {
             throw new DomainConstraintsViolationException(
-                    "Trying to set strange balance " + balance + " for wood : " + this.getName());
+                    "Trying to set strange woodCount " + woodCount + " for wood : " + this.getName());
         }
-        this.balance = balance;
+        this.woodCount = woodCount;
     }
 
     public boolean isBuying() {
@@ -54,7 +58,7 @@ public class Wood {
         return type;
     }
 
-    private void setType(WoodsType type) {
+    private void setType(WoodType type) {
         this.type = type;
     }
 
@@ -66,11 +70,33 @@ public class Wood {
         this.woodsId = woodsId;
     }
 
-    private int balance;
-	private boolean isBuying;
-	private String name;
+    @Column(name = "wood_count")
+    private int woodCount;
+
+    @Column(name = "is_buying")
+    private boolean isBuying;
+
+    @Column(name = "name", unique = true)
+    private String name;
+
+    @Column(name = "price")
 	private int price;
-	private WoodType type;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type")
+    private WoodType type;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "i_wood")
+    List<ProductMaterial> materialList = new ArrayList<ProductMaterial>();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "i_wood")
+    List<SupplyContent> supplyContentList = new ArrayList<SupplyContent>();
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "i_wood")
 	private int woodsId;
 
 	private Wood(){
@@ -79,7 +105,7 @@ public class Wood {
 
     public Wood(String name, WoodType type, int price) throws DomainConstraintsViolationException {
         setIsBuying(true);
-        setBalance(0);
+        setWoodCount(0);
         setName(name);
         setType(type);
         setPrice(price);

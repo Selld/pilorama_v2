@@ -3,7 +3,7 @@ package dao.dao_mock;
 import custom_exceptions.DomainConstraintsViolationException;
 import dao.ProductDAO;
 import domain.Product;
-import domain.ProductMaterials;
+import domain.ProductMaterial;
 import domain.Wood;
 
 import java.util.ArrayList;
@@ -25,8 +25,8 @@ public class ProductDAO_Mock extends GenericDAO_Mock implements ProductDAO {
 
     @Override
     public List<Product> getProductsByWood(Wood wood) throws DomainConstraintsViolationException {
-        List<ProductMaterials> materials = new ArrayList<>();
-        materials.add(new ProductMaterials(wood, 1));
+        List<ProductMaterial> materials = new ArrayList<>();
+        materials.add(new ProductMaterial(wood, 1));
 
         List<Product> products = new ArrayList<>();
         products.add(new Product(materials, "test", 1));

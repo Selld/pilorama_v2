@@ -2,6 +2,7 @@ package domain;
 
 import custom_exceptions.DomainConstraintsViolationException;
 
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -9,22 +10,24 @@ import java.util.List;
  * @version 1.0
  * @created 10-Oct-2016 10:56:59 PM
  */
+
+@Entity
 public class Product {
 
-	public int getBalance() {
-		return balance;
+	public int getProductCount() {
+		return productCount;
 	}
 
-	public void setBalance(int balance) {
-		this.balance = balance;
+	public void setProductCount(int productCount) {
+		this.productCount = productCount;
 	}
 
-	public List<ProductMaterials> getMaterials() {
+	public List<ProductMaterial> getMaterials() {
 		return materials;
 	}
 
-	private void setMaterials(List<ProductMaterials> materials) throws DomainConstraintsViolationException {
-		for (ProductMaterials m : materials) {
+	private void setMaterials(List<ProductMaterial> materials) throws DomainConstraintsViolationException {
+		for (ProductMaterial m : materials) {
 			if (!m.getWood().isBuying()) {
 				throw new DomainConstraintsViolationException(
 						"Cannot create product from wood which is not buying now" + m.getWood().getName());
@@ -61,17 +64,29 @@ public class Product {
 		this.productId = productId;
 	}
 
-	public Product(List<ProductMaterials> materials, String name, int price) throws DomainConstraintsViolationException {
-		setBalance(0);
+	public Product(List<ProductMaterial> materials, String name, int price) throws DomainConstraintsViolationException {
+		setProductCount(0);
 		setMaterials(materials);
 		setPrice(price);
 		setName(name);
 	}
 
-	private int balance;
-	private List<ProductMaterials> materials;
+	@Column(name = "product_count")
+	private int productCount;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "i_product_material")
+	private List<ProductMaterial> materials;
+
+    @Column(name = "name", unique = true)
 	private String name;
+
+	@Column(name = "price")
 	private int price;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.TABLE)
+	@Column(name = "i_product")
 	private int productId;
 
 	private Product(){

@@ -2,14 +2,18 @@ package domain;
 
 import custom_exceptions.DomainConstraintsViolationException;
 
+import javax.persistence.*;
+
 /**
  * @author selld
  * @version 1.0
  * @created 10-Oct-2016 10:56:59 PM
  */
-public class ProductMaterials {
 
-	public ProductMaterials(Wood wood, int count) {
+@Entity
+public class ProductMaterial {
+
+	public ProductMaterial(Wood wood, int count) throws DomainConstraintsViolationException {
 		setWood(wood);
 		setCount(count);
 	}
@@ -42,11 +46,21 @@ public class ProductMaterials {
 		this.wood = wood;
 	}
 
+	@Column(name = "count")
 	private int count;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.TABLE)
+	@Column(name = "i_product_material")
 	private int productMaterialsId;
+
+	@ManyToOne
 	private Wood wood;
 
-	private ProductMaterials(){
+	@ManyToOne
+	private  Product product;
+
+	private ProductMaterial(){
 
 	}
 

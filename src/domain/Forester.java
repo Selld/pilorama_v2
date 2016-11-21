@@ -2,6 +2,7 @@ package domain;
 
 import custom_exceptions.DomainConstraintsViolationException;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,9 +11,12 @@ import java.util.List;
  * @version 1.0
  * @created 10-Oct-2016 10:56:57 PM
  */
+@Entity
+@DiscriminatorValue("Forester")
 public class Forester extends User {
 
-
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "i_user")
 	private List<Supply> supplyList;
 
 	private Forester(){

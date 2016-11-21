@@ -2,6 +2,9 @@ package domain;
 
 import custom_exceptions.DomainConstraintsViolationException;
 
+import javax.persistence.*;
+
+@Entity
 public class SupplyContent {
 
 	public int getCount() {
@@ -32,9 +35,27 @@ public class SupplyContent {
 		this.wood = wood;
 	}
 
+	public Supply getSupply() {
+		return supply;
+	}
+
+	public void setSupply(Supply supply) {
+		this.supply = supply;
+	}
+
+	@Column(name = "count")
 	private int count;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.TABLE)
+	@Column(name = "i_supply_content")
 	private int supplyContentId;
+
+	@ManyToOne
 	private Wood wood;
+
+	@ManyToOne
+	private Supply supply;
 
 	private SupplyContent(){
 

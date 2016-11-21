@@ -2,11 +2,15 @@ package domain;
 
 import custom_exceptions.DomainConstraintsViolationException;
 
+import javax.persistence.*;
+
 /**
  * @author selld
  * @version 1.0
  * @created 10-Oct-2016 10:56:54 PM
  */
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class User {
 
 	public User(String login, String password, String firstName, String lastName) throws DomainConstraintsViolationException {
@@ -24,12 +28,12 @@ public class User {
 		this.firstName = firstName;
 	}
 
-	private int getHumanId() {
-		return humanId;
+	private int getUserId() {
+		return userId;
 	}
 
-	private void setHumanId(int humanId) {
-		this.humanId = humanId;
+	private void setUserId(int userId) {
+		this.userId = userId;
 	}
 
 	public String getLastName() {
@@ -61,10 +65,21 @@ public class User {
 		this.password = password;
 	}
 
+	@Column(name = "first_name")
 	private String firstName;
-	private int humanId;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE)
+    @Column(name = "i_user")
+	private int userId;
+
+    @Column(name = "last_name")
 	private String lastName;
+
+    @Column(name = "login", unique = true)
 	private String login;
+
+    @Column(name = "password")
 	private String password;
 
 	protected User(){

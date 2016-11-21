@@ -1,6 +1,8 @@
 package domain;
 
 import custom_exceptions.DomainConstraintsViolationException;
+
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
@@ -9,6 +11,7 @@ import java.util.List;
  * @version 1.0
  * @created 10-Oct-2016 10:56:52 PM
  */
+@Entity
 public class Supply {
 
 	public Forester getForester() {
@@ -58,9 +61,19 @@ public class Supply {
 		this.supplyId = supplyId;
 	}
 
+	@ManyToOne
 	private Forester forester;
+
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "i_supply")
 	private List<SupplyContent> supplyContent;
+
+	@Column(name = "date")
 	private Date supplyDate;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.TABLE)
+	@Column(name = "i_supply")
 	private int supplyId;
 
 	private Supply(){

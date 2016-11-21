@@ -4,11 +4,33 @@ import java.util.Date;
 import java.util.List;
 import custom_exceptions.DomainConstraintsViolationException;
 
+import javax.persistence.*;
+
+@Entity
 public class Sale {
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "i_sale")
 	private List<SaleContent> saleContent;
+
+    @Column(name = "sale_date")
 	private Date saleDate;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE)
+    @Column(name = "i_sale")
 	private int saleId;
+
+    @ManyToOne
+    private Customer customer;
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
 
     public List<SaleContent> getSaleContent() {
         return saleContent;
