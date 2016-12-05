@@ -62,7 +62,7 @@ public class Wood {
         this.type = type;
     }
 
-    private int getWoodsId() {
+    public int getWoodsId() {
         return woodsId;
     }
 
@@ -99,7 +99,7 @@ public class Wood {
     @Column(name = "i_wood")
 	private int woodsId;
 
-	private Wood(){
+	public Wood(){
 
 	}
 

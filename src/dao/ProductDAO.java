@@ -9,10 +9,10 @@ import java.util.List;
 /**
  * Created by selld on 24.10.16.
  */
-public interface ProductDAO extends GenericDAO {
+public interface ProductDAO extends GenericDAO<Product> {
     List<Product> getMostPopularProducts(int count);
 
-    Product getProductByName(String name) throws DomainConstraintsViolationException;
+    Product getProductByName(String name);
 
-    List<Product> getProductsByWood(Wood wood) throws DomainConstraintsViolationException;
+    List<Product> getProductsByWood(Wood wood);
 }

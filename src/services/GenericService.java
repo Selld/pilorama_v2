@@ -7,14 +7,14 @@ import java.util.List;
  * @version 1.0
  * @created 12-Oct-2016 12:48:01 AM
  */
-public interface GenericService {
+public interface GenericService<T> {
 
-	<T> List<T> getAll();
+	List<T> getAll();
 
-	<T> T getById(int id);
+	T getById(int id);
 
-	<T> boolean remove(T obj);
+	void remove(T obj);
 
-	<T> boolean save(T obj);
+	void save(T obj);
 
 }

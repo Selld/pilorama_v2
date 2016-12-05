@@ -39,11 +39,22 @@ public class SaleContent {
 		this.saleContentId = saleContentId;
 	}
 
+	public Sale getSale() {
+		return sale;
+	}
+
+	public void setSale(Sale sale) {
+		this.sale = sale;
+	}
+
 	@Column(name = "count")
 	private int count;
 
 	@ManyToOne
 	private Product product;
+
+	@ManyToOne
+	private Sale sale;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)

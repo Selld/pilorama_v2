@@ -5,26 +5,28 @@ import custom_exceptions.DomainConstraintsViolationException;
 import dao.ProductDAO;
 import dao.WoodDAO;
 import domain.Product;
-import domain.ProductMaterials;
+import domain.ProductMaterial;
 import domain.Wood;
 import domain.WoodType;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import services.WoodService;
 
+import javax.persistence.EntityTransaction;
 import java.util.List;
 
-public class WoodServiceImpl extends GenericServiceImpl implements WoodService {
+public class WoodServiceImpl extends GenericServiceImpl<Wood> implements WoodService {
 
     private WoodDAO woodDAO;
     private ProductDAO productDAO;
 
-    public SupplyServiceImpl() {
+    public WoodServiceImpl() {
         ApplicationContext context =
                 new ClassPathXmlApplicationContext("Beans.xml");
 
         woodDAO = (WoodDAO) context.getBean("woodDAO");
         productDAO = (ProductDAO) context.getBean("productDAO");
+        super.setGenericDAO(woodDAO);
     }
 
     @Override
@@ -39,10 +41,23 @@ public class WoodServiceImpl extends GenericServiceImpl implements WoodService {
 
     @Override
     public void addNewWood(Wood wood) throws AlreadyExistsException {
-        if (woodDAO.woodExists(wood)) {
-            throw new AlreadyExistsException("Such wood is already exists " + wood.getName());
+
+        EntityTransaction tr = entityManager.getTransaction();
+
+        try {
+            tr.begin();
+            if (woodDAO.woodExists(wood)) {
+                throw new AlreadyExistsException("Such wood is already exists " + wood.getName());
+            }
+            woodDAO.save(wood);
+
+            tr.commit();
+        } catch (AlreadyExistsException e) {
+            tr.commit();
+            throw e;
         }
-        woodDAO.save(wood);
+
+
     }
 
     @Override
@@ -51,20 +66,29 @@ public class WoodServiceImpl extends GenericServiceImpl implements WoodService {
     }
 
     @Override
-    public Wood remove(Wood wood) {
-        List<Product> products = productDAO.getAll();
-        for (Product product : products) {
-            List<ProductMaterials> productMaterials = product.getMaterials();
+    public void remove(Wood wood) {
 
-            for (ProductMaterials pm : productMaterials) {
-                if (pm.getWood().equals(wood)) {
-                    wood.setIsBuying(false);
-                    woodDAO.save(true);
-                    return wood;
+        EntityTransaction tr = entityManager.getTransaction();
+
+        try {
+            tr.begin();
+            List<Product> products = productDAO.getAll();
+            for (Product product : products) {
+                List<ProductMaterial> productMaterials = product.getMaterials();
+
+                for (ProductMaterial pm : productMaterials) {
+                    if (pm.getWood().equals(wood)) {
+                        wood.setIsBuying(false);
+                        woodDAO.save(wood);
+                    }
                 }
             }
+            tr.commit();
+        } catch (Exception e) {
+            tr.rollback();
+            throw e;
         }
+
         woodDAO.remove(wood);
-        return wood;
     }
 }

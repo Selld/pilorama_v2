@@ -8,7 +8,7 @@ import domain.WoodType;
 import java.util.List;
 
 
-public interface WoodService extends GenericService {
+public interface WoodService extends GenericService<Wood> {
 
 	Wood getByName(String name) throws DomainConstraintsViolationException;
 
@@ -17,8 +17,5 @@ public interface WoodService extends GenericService {
 	void addNewWood(Wood wood) throws AlreadyExistsException;
 
 	List<Wood> getWoodsByType(WoodType type);
-
-	@Override
-	Wood remove(Wood wood);
 
 }

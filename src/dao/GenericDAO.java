@@ -1,16 +1,17 @@
 package dao;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by selld on 23.10.16.
  */
-public interface GenericDAO {
-    <T> List<T> getAll();
+public interface GenericDAO <T> {
+    List<T> getAll();
 
-    <T> T getById(int id);
+    T getById(int id);
 
-    <T> boolean remove(T obj);
+    void remove(T obj);
 
-    <T> boolean save(T obj);
+    void save(T obj);
 }

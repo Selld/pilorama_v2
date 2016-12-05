@@ -4,7 +4,7 @@ import custom_exceptions.AlreadyExistsException;
 import custom_exceptions.DomainConstraintsViolationException;
 import domain.User;
 
-public interface UserService extends GenericService {
+public interface UserService extends GenericService<User> {
 
 	User getUserByLastName(String lastName) throws DomainConstraintsViolationException;
 

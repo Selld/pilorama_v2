@@ -7,7 +7,7 @@ import javassist.NotFoundException;
 import java.util.Date;
 import java.util.List;
 
-public interface SupplyService extends GenericService {
+public interface SupplyService extends GenericService<Supply> {
 
 	List<Supply> getSupplyByDate(Date date) throws DomainConstraintsViolationException;
 

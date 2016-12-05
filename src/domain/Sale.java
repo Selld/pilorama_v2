@@ -14,6 +14,7 @@ public class Sale {
 	private List<SaleContent> saleContent;
 
     @Column(name = "sale_date")
+    @Temporal(TemporalType.TIMESTAMP)
 	private Date saleDate;
 
     @Id

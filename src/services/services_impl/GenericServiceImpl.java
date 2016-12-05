@@ -1,40 +1,43 @@
 package services.services_impl;
 
+import domain.Wood;
 import services.GenericService;
 import dao.GenericDAO;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
-public abstract class GenericServiceImpl implements GenericService {
+public abstract class GenericServiceImpl<T> implements GenericService<T> {
 
-    private GenericDAO genericDAO;
+    private GenericDAO<T> genericDAO;
 
-    public GenericServiceImpl() {
-        ApplicationContext context =
-                new ClassPathXmlApplicationContext("Beans.xml");
+    @PersistenceContext
+    protected EntityManager entityManager;
 
-        genericDAO = (GenericDAO) context.getBean("genericDAO");
+    protected void setGenericDAO(GenericDAO<T> genericDAO) {
+        this.genericDAO = genericDAO;
     }
 
     @Override
-    public <T> List<T> getAll() {
+    public List<T> getAll() {
         return genericDAO.getAll();
     }
 
     @Override
-    public <T> T getById(int id) {
+    public T getById(int id) {
         return genericDAO.getById(id);
     }
 
     @Override
-    public <T> boolean remove(T obj) {
-        return genericDAO.remove(obj);
+    public void remove(T obj) {
+        genericDAO.remove(obj);
     }
 
     @Override
-    public <T> boolean save(T obj) {
-        return genericDAO.save(obj);
+    public void save(T obj) {
+        genericDAO.save(obj);
     }
 }

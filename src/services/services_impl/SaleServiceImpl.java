@@ -5,18 +5,16 @@ import dao.CustomerDAO;
 import custom_exceptions.InvalidUserException;
 import dao.ProductDAO;
 import dao.SaleDAO;
-import domain.Customer;
-import domain.Product;
-import domain.Sale;
-import domain.SaleContent;
+import domain.*;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import services.SaleService;
 
+import javax.persistence.EntityTransaction;
 import java.util.Date;
 import java.util.List;
 
-public class SaleServiceImpl extends GenericServiceImpl implements SaleService {
+public class SaleServiceImpl extends GenericServiceImpl<Sale> implements SaleService {
 
     private static final long SALE_EXPIRE_TTL = 14;
 
@@ -31,12 +29,12 @@ public class SaleServiceImpl extends GenericServiceImpl implements SaleService {
         saleDAO = (SaleDAO) context.getBean("saleDAO");
         productDAO = (ProductDAO) context.getBean("productDAO");
         customerDAO = (CustomerDAO) context.getBean("customerDAO");
-
+        setGenericDAO(saleDAO);
     }
 
     @Override
     public List<Sale> getSaleByCustomer(Customer customer) throws DomainConstraintsViolationException {
-        return saleDAO.getSaleByCustomer();
+        return saleDAO.getSaleByCustomer(customer);
     }
 
     @Override
@@ -53,52 +51,77 @@ public class SaleServiceImpl extends GenericServiceImpl implements SaleService {
     public boolean makeSale(List<SaleContent> saleContents, int customerId)
             throws DomainConstraintsViolationException, InvalidUserException
     {
+        EntityTransaction tr = entityManager.getTransaction();
 
-        Customer customer = customerDAO.getById(customerId);
-        if (customer == null) {
-            throw new InvalidUserException("Customer with id " + customerId + " does not exists");
-        }
+        try {
+            tr.begin();
 
-        Sale sale = new Sale(saleContents);
-
-        for (SaleContent sc : saleContents) {
-            Product product = sc.getProduct();
-            if (product.getBalance() - sc.getCount() < 0) {
-                throw new DomainConstraintsViolationException(
-                        "Not enough products of type " + product.getName() + " needed " + sc.getCount() +
-                        "available " + product.getBalance());
+            User user = customerDAO.getById(customerId);
+            if ( (user == null) || ! (user instanceof Customer)) {
+                throw new InvalidUserException("Customer with id " + customerId + " does not exists");
             }
-        }
-        for (SaleContent sc : saleContents) {
-            Product product = sc.getProduct();
-            product.setBalance(product.getBalance() - sc.getCount());
-            productDAO.save(product);
-        }
+            Customer customer = (Customer)user;
 
-        saleDAO.save(sale);
-        customer.addSale(sale);
-        customerDAO.save(sale);
+            Sale sale = new Sale(saleContents);
+
+            for (SaleContent sc : saleContents) {
+                Product product = sc.getProduct();
+                if (product.getProductCount() - sc.getCount() < 0) {
+                    throw new DomainConstraintsViolationException(
+                            "Not enough products of type " + product.getName() + " needed "
+                                    + sc.getCount() +
+                                    "available " + product.getProductCount());
+                }
+            }
+            for (SaleContent sc : saleContents) {
+                Product product = sc.getProduct();
+                product.setProductCount(product.getProductCount() - sc.getCount());
+                productDAO.save(product);
+            }
+
+            saleDAO.save(sale);
+            customer.addSale(sale);
+            customerDAO.save(customer);
+
+            tr.commit();
+        } catch (DomainConstraintsViolationException | InvalidUserException e) {
+            tr.rollback();
+            throw e;
+        }
     }
 
     @Override
     public boolean rollbackSale(Sale sale) {
 
-        Date currentDate = new Date();
-        long msSinceSale = currentDate.getTime() - sale.getSaleDate().getTime();
-        long daysSinceSale = msSinceSale / ( 1000 * 24 * 3600 );
+        EntityTransaction tr = entityManager.getTransaction();
+        boolean result = true;
 
-        if (daysSinceSale > SALE_EXPIRE_TTL) {
-            return false;
+        try {
+            tr.begin();
+
+            Date currentDate = new Date();
+            long msSinceSale = currentDate.getTime() - sale.getSaleDate().getTime();
+            long daysSinceSale = msSinceSale / ( 1000 * 24 * 3600 );
+
+            if (daysSinceSale > SALE_EXPIRE_TTL) {
+                result = false;
+            }
+
+            if (result) {
+                for (SaleContent sc : sale.getSaleContent() ) {
+                    Product product = sc.getProduct();
+                    product.setProductCount(product.getProductCount() + sc.getCount());
+                    productDAO.save(product);
+                }
+                saleDAO.remove(sale);
+            }
+
+            tr.commit();
+        } catch (Exception e) {
+            tr.rollback();
+            throw e;
         }
 
-        for (SaleContent sc : sale.getSaleContent() ) {
-            Product product = sc.getProduct();
-            product.setBalance(product.getBalance() + sc.getCount());
-            productDAO.save(product);
-        }
-
-        saleDAO.remove(sale);
-
-        return true;
+        return result;
     }
 }

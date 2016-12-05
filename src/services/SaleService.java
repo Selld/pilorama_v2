@@ -9,7 +9,7 @@ import domain.SaleContent;
 
 import java.util.List;
 
-public interface SaleService extends GenericService {
+public interface SaleService extends GenericService<Sale> {
 
 	public List<Sale> getSaleByCustomer(Customer customer) throws DomainConstraintsViolationException;
 

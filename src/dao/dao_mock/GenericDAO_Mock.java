@@ -9,12 +9,12 @@ import java.util.List;
  */
 public class GenericDAO_Mock implements GenericDAO {
     @Override
-    public <T> List<T> getAll() {
+    public <T> List<T> getAll(Class objClass) {
         return null;
     }
 
     @Override
-    public <T> T getById(int id) {
+    public <T> T getById(int id, Class objClass) {
         return null;
     }
 

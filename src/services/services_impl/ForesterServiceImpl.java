@@ -1,5 +1,8 @@
+package services.services_impl;
+
 import dao.ForesterDAO;
 import domain.Forester;
+import domain.Wood;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import services.ForesterService;
@@ -16,6 +19,7 @@ public class ForesterServiceImpl extends UserServiceImpl implements ForesterServ
                 new ClassPathXmlApplicationContext("Beans.xml");
 
         foresterDAO = (ForesterDAO) context.getBean("foresterDAO");
+        setGenericDAO(foresterDAO);
     }
 
     @Override

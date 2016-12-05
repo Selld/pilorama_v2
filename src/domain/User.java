@@ -28,7 +28,7 @@ public class User {
 		this.firstName = firstName;
 	}
 
-	private int getUserId() {
+	public int getUserId() {
 		return userId;
 	}
 

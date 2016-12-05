@@ -2,11 +2,52 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <bean id="customerDAO" class="dao.dao_mock.CustomerDAO_Mock"/>
-    <bean id="woodDAO" class="dao.dao_mock.WoodDAO_Mock"/>
-    <bean id="foresterDAO" class="dao.dao_mock.ForesterDAO_Mock"/>
-    <bean id="productDAO" class="dao.dao_mock.ProductDAO_Mock"/>
-    <bean id="saleDAO" class="dao.dao_mock.SaleDAO_Mock"/>
-    <bean id="supplyDAO" class="dao.dao_mock.SupplyDAO_Mock"/>
-    <bean id="userDAO" class="dao.dao_mock.UserDAO_Mock"/>
+    <bean id="customerDAO" class="dao.dao_jpa.CustomerDAO_JPA"/>
+    <bean id="woodDAO" class="dao.dao_jpa.WoodDAO_JPA"/>
+    <bean id="foresterDAO" class="dao.dao_jpa.ForesterDAO_JPA"/>
+    <bean id="productDAO" class="dao.dao_jpa.ProductDAO_JPA"/>
+    <bean id="saleDAO" class="dao.dao_jpa.SaleDAO_JPA"/>
+    <bean id="supplyDAO" class="dao.dao_jpa.SupplyDAO_JPA"/>
+    <bean id="userDAO" class="dao.dao_jpa.UserDAO_JPA"/>
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceUnitName" value="piloramaPersistence"/>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.connection.url">
+                    jdbc:mysql://localhost/pilorama
+                </prop>
+            </props>
+            <props>
+                <prop key="hibernate.connection.driver_class">
+                    com.mysql.jdbc.Driver
+                </prop>
+            </props>
+            <props>
+                <prop key="hibernate.connection.username">
+                    root
+                </prop>
+            </props>
+            <props>
+                <prop key="hibernate.connection.password">
+                    root123
+                </prop>
+            </props>
+            <props>
+                <prop key="hibernate.dialect">
+                    org.hibernate.dialect.MySQLDialect
+                </prop>
+            </props>
+            <props>
+                <prop key="hibernate.hbm2ddl.auto">
+                    create
+                </prop>
+            </props>
+            <props>
+                <prop key="hibernate.show_sql">
+                    true
+                </prop>
+            </props>
+        </property>
+    </bean>
 </beans>

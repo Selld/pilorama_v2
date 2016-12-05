@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by selld on 24.10.16.
  */
-public interface WoodDAO extends GenericDAO {
+public interface WoodDAO extends GenericDAO<Wood> {
     Wood getWoodByName(String name) throws DomainConstraintsViolationException;
 
     List<Wood> getMostPopularWood(int count);

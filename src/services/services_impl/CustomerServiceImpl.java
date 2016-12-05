@@ -2,6 +2,7 @@ package services.services_impl;
 
 import dao.CustomerDAO;
 import domain.Customer;
+import domain.Wood;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import services.CustomerService;
@@ -20,9 +21,11 @@ public class CustomerServiceImpl extends UserServiceImpl implements CustomerServ
                 new ClassPathXmlApplicationContext("Beans.xml");
 
         customerDAO = (CustomerDAO) context.getBean("customerDAO");
+        setGenericDAO(customerDAO);
     }
 
     public List<Customer> getMostActiveCustomers(int count) {
+
         return customerDAO.getMostActiveCustomers(count);
     }
 }
