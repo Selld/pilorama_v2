@@ -15,7 +15,7 @@ public class ForesterDAO_JPA extends UserDAO_JPA implements ForesterDAO {
         Query q = entityManager.
                 createQuery("select f" +
                         " from Forester f, Supply s " +
-                        "where f = f.customer " +
+                        "where f = s.forester " +
                         "group by f.id " +
                         "order by sum(f.id)");
         q.setMaxResults(count);
