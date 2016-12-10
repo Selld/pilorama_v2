@@ -5,6 +5,7 @@ import dao.SupplyDAO;
 import domain.Forester;
 import domain.Supply;
 import domain.Wood;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
 import java.util.Date;
@@ -13,6 +14,7 @@ import java.util.List;
 /**
  * Created by selld on 04.12.16.
  */
+@Transactional
 public class SupplyDAO_JPA extends GenericDAO_JPA<Supply> implements SupplyDAO {
 
     public SupplyDAO_JPA() {

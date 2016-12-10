@@ -5,20 +5,22 @@ import domain.Forester;
 import domain.Wood;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.transaction.annotation.Transactional;
 import services.ForesterService;
 import services.services_impl.UserServiceImpl;
+import util.ApplicationContextProvider;
 
 import java.util.List;
 
+@Transactional
 public class ForesterServiceImpl extends UserServiceImpl implements ForesterService {
 
     private ForesterDAO foresterDAO;
 
     public ForesterServiceImpl() {
-        ApplicationContext context =
-                new ClassPathXmlApplicationContext("Beans.xml");
+        ApplicationContext applicationContext = ApplicationContextProvider.getApplicationContext();
 
-        foresterDAO = (ForesterDAO) context.getBean("foresterDAO");
+        foresterDAO = (ForesterDAO) applicationContext.getBean("foresterDAO");
         setGenericDAO(foresterDAO);
     }
 

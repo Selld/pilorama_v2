@@ -2,6 +2,7 @@ package dao.dao_jpa;
 
 import dao.CustomerDAO;
 import domain.Customer;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 /**
  * Created by selld on 05.12.16.
  */
+@Transactional
 public class CustomerDAO_JPA extends UserDAO_JPA implements CustomerDAO {
     @Override
     public List<Customer> getMostActiveCustomers(int count) {

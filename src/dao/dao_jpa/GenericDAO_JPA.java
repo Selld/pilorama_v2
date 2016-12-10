@@ -1,19 +1,23 @@
 package dao.dao_jpa;
 
 import dao.GenericDAO;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by selld on 04.12.16.
  */
+
+@Transactional
 public abstract class GenericDAO_JPA<T> implements GenericDAO<T> {
     private Class<T> clazz;
 
-    @PersistenceContext
+    @PersistenceContext(unitName = "piloramaPersistence")
     protected EntityManager entityManager;
 
     public final void setClass( Class< T > clazzToSet ){

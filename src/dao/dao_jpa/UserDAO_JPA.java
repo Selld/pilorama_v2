@@ -3,12 +3,14 @@ package dao.dao_jpa;
 import custom_exceptions.DomainConstraintsViolationException;
 import dao.UserDAO;
 import domain.User;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
 
 /**
  * Created by selld on 04.12.16.
  */
+@Transactional
 public class UserDAO_JPA extends GenericDAO_JPA<User> implements UserDAO {
 
     public UserDAO_JPA() {

@@ -6,22 +6,24 @@ import dao.UserDAO;
 import domain.User;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.transaction.annotation.Transactional;
 import services.UserService;
+import util.ApplicationContextProvider;
 
 import javax.persistence.EntityTransaction;
 
 /**
  * Created by selld on 24.10.16.
  */
+@Transactional
 public class UserServiceImpl extends GenericServiceImpl<User> implements UserService {
 
     private UserDAO userDAO;
 
     public UserServiceImpl() {
-        ApplicationContext context =
-                new ClassPathXmlApplicationContext("Beans.xml");
+        ApplicationContext applicationContext = ApplicationContextProvider.getApplicationContext();
 
-        userDAO = (UserDAO) context.getBean("userDAO");
+        userDAO = (UserDAO) applicationContext.getBean("userDAO");
         setGenericDAO(userDAO);
     }
 
@@ -42,23 +44,10 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
 
     @Override
     public void registerUser(User user) throws AlreadyExistsException, DomainConstraintsViolationException {
-
-        EntityTransaction tr = entityManager.getTransaction();
-
-        try {
-            tr.begin();
-
-            if (userDAO.getUserByLogin(user.getLogin()) != null) {
-                throw new AlreadyExistsException("User with login " + user.getLogin() + " already exists");
-            }
-            userDAO.save(user);
-
-            tr.commit();
-        } catch (AlreadyExistsException e) {
-            tr.rollback();
-            throw e;
+        if (userDAO.getUserByLogin(user.getLogin()) != null) {
+            throw new AlreadyExistsException("User with login " + user.getLogin() + " already exists");
         }
-
+        userDAO.save(user);
 
     }
 }

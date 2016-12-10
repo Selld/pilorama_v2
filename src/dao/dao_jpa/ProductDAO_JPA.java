@@ -5,6 +5,7 @@ import domain.ProductMaterial;
 import dao.ProductDAO;
 import domain.Product;
 import domain.Wood;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 /**
  * Created by selld on 05.12.16.
  */
+@Transactional
 public class ProductDAO_JPA extends GenericDAO_JPA<Product> implements ProductDAO {
     @Override
     public List<Product> getMostPopularProducts(int count) {

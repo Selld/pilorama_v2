@@ -8,7 +8,9 @@ import domain.ProductMaterial;
 import domain.Wood;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.transaction.annotation.Transactional;
 import services.ProductService;
+import util.ApplicationContextProvider;
 
 import javax.persistence.EntityTransaction;
 import java.util.List;
@@ -16,15 +18,15 @@ import java.util.List;
 /**
  * Created by selld on 24.10.16.
  */
+@Transactional
 public class ProductServiceImpl  extends GenericServiceImpl<Product> implements ProductService {
 
     private ProductDAO productDAO;
 
     public ProductServiceImpl() {
-        ApplicationContext context =
-                new ClassPathXmlApplicationContext("Beans.xml");
+        ApplicationContext applicationContext = ApplicationContextProvider.getApplicationContext();
 
-        productDAO = (ProductDAO) context.getBean("productDAO");
+        productDAO = (ProductDAO) applicationContext.getBean("productDAO");
         setGenericDAO(productDAO);
     }
 
@@ -51,22 +53,9 @@ public class ProductServiceImpl  extends GenericServiceImpl<Product> implements 
     @Override
     public void addNewProduct(Product product) throws AlreadyExistsException
     {
-        EntityTransaction tr = entityManager.getTransaction();
-
-        try {
-
-            tr.begin();
-
-            if (productDAO.getProductByName(product.getName()) != null) {
-                throw new AlreadyExistsException("Product with name " + product.getName() + " is already exists");
-            }
-            productDAO.save(product);
-
-            tr.commit();
-
-        } catch (AlreadyExistsException e) {
-            tr.rollback();
-            throw e;
+        if (productDAO.getProductByName(product.getName()) != null) {
+            throw new AlreadyExistsException("Product with name " + product.getName() + " is already exists");
         }
+        productDAO.save(product);
     }
 }

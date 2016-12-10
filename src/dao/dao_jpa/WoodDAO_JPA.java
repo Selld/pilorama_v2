@@ -4,6 +4,7 @@ import custom_exceptions.DomainConstraintsViolationException;
 import dao.WoodDAO;
 import domain.Wood;
 import domain.WoodType;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 /**
  * Created by selld on 04.12.16.
  */
+@Transactional
 public class WoodDAO_JPA extends GenericDAO_JPA<Wood> implements WoodDAO  {
 
     public WoodDAO_JPA() {

@@ -1,21 +1,15 @@
 package services.services_impl;
 
-import domain.Wood;
+import org.springframework.transaction.annotation.Transactional;
 import services.GenericService;
 import dao.GenericDAO;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 
+@Transactional
 public abstract class GenericServiceImpl<T> implements GenericService<T> {
 
     private GenericDAO<T> genericDAO;
-
-    @PersistenceContext
-    protected EntityManager entityManager;
 
     protected void setGenericDAO(GenericDAO<T> genericDAO) {
         this.genericDAO = genericDAO;

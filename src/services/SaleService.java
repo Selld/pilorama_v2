@@ -19,6 +19,6 @@ public interface SaleService extends GenericService<Sale> {
 
 	public boolean rollbackSale(Sale sale);
 
-	public boolean makeSale(List<SaleContent> saleContents, int customerId) throws DomainConstraintsViolationException, InvalidUserException;
+	public void makeSale(List<SaleContent> saleContents, int customerId) throws DomainConstraintsViolationException, InvalidUserException;
 
 }
